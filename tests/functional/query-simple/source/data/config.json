@@ -1,0 +1,13 @@
+{
+  "parameters": {
+    "db": {
+      "accountId": "${ODBC_ACCOUNT_ID}",
+      "roleId":  "${ODBC_ROLE_ID}",
+      "user": "${ODBC_USER}",
+      "#password": "${ODBC_PASSWORD}"
+    },
+    "query": "SELECT InternalId,CurrencyPrecision,DisplaySymbol FROM Currency WHERE InternalId < 10",
+    "outputTable": "in.c-main.currency",
+    "primaryKey": []
+  }
+}

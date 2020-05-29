@@ -1,7 +1,17 @@
 version: '3'
 services:
   dev:
-    build: .
+    build:
+      context: .
+      args:
+        RTK_LICENSE_BUILD_ARG: $RTK_LICENSE
+    image: keboola-db-extractor-netsuite
     volumes:
       - ./:/code
       - ./data:/data
+    environment:
+      - ODBC_ACCOUNT_ID
+      - ODBC_ROLE_ID
+      - ODBC_USER
+      - ODBC_PASSWORD
+

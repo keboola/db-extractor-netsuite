@@ -2,18 +2,45 @@
 
 declare(strict_types=1);
 
-use Keboola\Component\UserException;
+use Keboola\CommonExceptions\UserExceptionInterface;
 use Keboola\Component\Logger;
-use MyComponent\Component;
+use Keboola\Component\JsonHelper;
+use Keboola\Component\UserException;
+use Keboola\DbExtractor\OdbcApplication;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $logger = new Logger();
 try {
-    $app = new Component($logger);
-    $app->execute();
+    $dataFolder = getenv('KBC_DATADIR') === false ? '/data/' : (string) getenv('KBC_DATADIR');
+    if (file_exists($dataFolder . '/config.json')) {
+        $config = JsonHelper::readFile($dataFolder . '/config.json');
+    } else {
+        throw new UserException('Configuration file not found.');
+    }
+
+    // get the state
+    $inputStateFile = $dataFolder . '/in/state.json';
+    if (file_exists($inputStateFile)) {
+        $inputState = JsonHelper::readFile($inputStateFile);
+    } else {
+        $inputState = [];
+    }
+
+    $app = new OdbcApplication($config, $logger, $inputState, $dataFolder);
+    $result = $app->run();
+
+    if ($app['action'] !== 'run') {
+        // Print sync action result
+        echo JsonHelper::encode($result);
+    } else if (!empty($result['state'])) {
+        // Write state if present
+        $outputStateFile = $dataFolder . '/out/state.json';
+        JsonHelper::writeFile($outputStateFile, $result['state']);
+    }
+    $logger->log('info', 'Extractor finished successfully.');
     exit(0);
-} catch (UserException $e) {
+} catch (UserExceptionInterface $e) {
     $logger->error($e->getMessage());
     exit(1);
 } catch (\Throwable $e) {
