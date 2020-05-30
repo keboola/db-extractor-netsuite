@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Keboola\DbExtractor\Tests;
 
-use Keboola\Component\Logger;
 use Keboola\DbExtractor\OdbcApplication;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
 abstract class BaseTest extends TestCase
@@ -22,7 +23,8 @@ abstract class BaseTest extends TestCase
 
     protected function runApp(array $config): array
     {
-        $logger = new Logger();
+        $logger = new Logger('test');
+        $logger->pushHandler(new StreamHandler('php://stdout'));
         $app = new OdbcApplication($config, $logger);
         return $app->run();
     }

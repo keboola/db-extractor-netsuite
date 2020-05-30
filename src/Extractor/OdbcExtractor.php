@@ -32,7 +32,7 @@ class OdbcExtractor extends BaseExtractor
     {
         $dsnFactory = new NetSuiteDsnFactory();
         $dsn = $dsnFactory->create($dbParams);
-        $maskedDsn = preg_replace('~RTK=[a-zA-Z0-9]+~', $dsn, 'RTK=****');
+        $maskedDsn = preg_replace('~RTK=[a-zA-Z0-9]+~', 'RTK=***', $dsn);
         $this->logger->info("Connecting to DSN '$maskedDsn'");
         return new NetSuiteDbAdapter($this->logger, $dsn, $dbParams['user'], $dbParams['#password']);
     }
