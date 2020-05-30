@@ -1,14 +1,19 @@
 {
-    "name": "keboola/my-component",
-    "description": "MyComponent description",
+    "name": "keboola/db-extractor-netsuite",
+    "description": "KBC Docker app for extracting data from Oracle NetSuite tool.",
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-json": "*",
+        "ext-odbc": "*",
+        "keboola/db-extractor-common": "dev-webrouse-254-db-adapter",
+        "keboola/db-extractor-config": "^1.3",
+        "keboola/db-extractor-table-format": "^3.0",
         "keboola/php-component": "^8.1"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.2",
-        "keboola/coding-standard": ">=7.0.2",
+        "keboola/coding-standard": ">=9.0",
         "keboola/datadir-tests": "^4.0",
         "keboola/php-temp": "^2.0",
         "phpstan/phpstan": "^0.12.14",
@@ -17,13 +22,13 @@
     },
     "autoload": {
         "psr-4": {
-            "MyComponent\\": "src/"
+            "Keboola\\DbExtractor\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MyComponent\\Tests\\": "tests/phpunit/",
-            "MyComponent\\FunctionalTests\\": "tests/functional/"
+            "Keboola\\DbExtractor\\Tests\\": "tests/phpunit/",
+            "Keboola\\DbExtractor\\FunctionalTests\\": "tests/functional/"
         }
     },
     "scripts": {
@@ -47,6 +52,12 @@
         "ci": [
             "@composer validate --no-check-publish --no-check-all",
             "@build"
+        ],
+        "ci-without-tests": [
+            "@composer validate --no-check-publish --no-check-all",
+            "@phplint",
+            "@phpcs",
+            "@phpstan"
         ]
     },
     "config": {

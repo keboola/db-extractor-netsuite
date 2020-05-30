@@ -1,5 +1,9 @@
 FROM php:7.4-cli
 
+# CDATA ODBC driver requires RTK - runtime key in connection parameters - used for licensing.
+ARG RTK_LICENSE_BUILD_ARG
+ENV RTK_LICENSE=$RTK_LICENSE_BUILD_ARG
+
 ARG COMPOSER_FLAGS="--prefer-dist --no-interaction"
 ARG DEBIAN_FRONTEND=noninteractive
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -14,6 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         locales \
         unzip \
+        unixodbc \
+        unixodbc-dev \
+        expect \
 	&& rm -r /var/lib/apt/lists/* \
 	&& sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
 	&& locale-gen \
@@ -23,6 +30,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV LANGUAGE=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
+
+# PHP ODBC
+# https://github.com/docker-library/php/issues/103#issuecomment-353674490
+RUN set -ex; \
+    docker-php-source extract; \
+    { \
+        echo '# https://github.com/docker-library/php/issues/103#issuecomment-353674490'; \
+        echo 'AC_DEFUN([PHP_ALWAYS_SHARED],[])dnl'; \
+        echo; \
+        cat /usr/src/php/ext/odbc/config.m4; \
+    } > temp.m4; \
+    mv temp.m4 /usr/src/php/ext/odbc/config.m4; \
+    docker-php-ext-configure odbc --with-unixODBC=shared,/usr; \
+    docker-php-ext-install odbc; \
+    docker-php-source delete
+
+# ODBC driver - it should work with any CDATA ODBC driver, just replace the DEB file.
+#######################################
+COPY docker/NetSuiteODBCDriver.deb /tmp/odbc.deb
+COPY docker/license /tmp/license
+RUN dpkg -i /tmp/odbc.deb \
+    && cd /opt/cdata/cdata-*/bin \
+    && cp /tmp/license ./ \
+    && ./license \
+    && odbcinst -q -d
+#######################################
 
 ## Composer - deps always cached unless changed
 # First copy only composer files
