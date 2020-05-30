@@ -4,6 +4,29 @@
 
 [KBC](https://www.keboola.com/product/) Docker app for extracting data from [Oracle NetSuite](https://www.netsuite.com/) tool.
 
+## Configuration
+
+The configuration `config.json` contains following properties in `parameters` key: 
+
+*Note:* `query` or `table` must be specified.
+
+- `db` - object (required): Connection settings
+    - `accountId` - string (required)
+    - `roleId` - string (required)
+    - `user` - string (required): User with correct access rights
+    - `#password` - string (required): Password for given `user`
+- `query` - string (optional): SQL query whose output will be extracted
+- `table` - object (optional): Table whose will be extracted
+    - `tableName` - string (required)
+    - `schema` - string (required)
+- `columns` - array (optional): List of columns to export (default all columns)
+- `outputTable` - string (required): Name of the output table 
+- `incremental` - bool (optional):  Enables [Incremental Fetching](https://help.keboola.com/components/extractors/database/#incremental-fetching)
+- `incrementalFetchingColumn` - string (optional): Name of column for [Incremental Fetching](https://help.keboola.com/components/extractors/database/#incremental-fetching)
+- `incrementalFetchingLimit` - integer (optional): Max number of rows fetched per one run
+- `primaryKey` - string (optional): Sets primary key to specified column in output table
+- `retries` - integer (optional): Number of retries if an error occurred
+
 ## Example configuration
 
 ### Get Tables
