@@ -221,16 +221,16 @@
         },
         {
             "name": "keboola/db-extractor-config",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/db-extractor-config.git",
-                "reference": "3c7a90fa01c4079423f2eb1aa5721794f9cffd43"
+                "reference": "a1d750f4482b6849f8cfd73e6d572bee16b36e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/db-extractor-config/zipball/3c7a90fa01c4079423f2eb1aa5721794f9cffd43",
-                "reference": "3c7a90fa01c4079423f2eb1aa5721794f9cffd43",
+                "url": "https://api.github.com/repos/keboola/db-extractor-config/zipball/a1d750f4482b6849f8cfd73e6d572bee16b36e8a",
+                "reference": "a1d750f4482b6849f8cfd73e6d572bee16b36e8a",
                 "shasum": ""
             },
             "require": {
@@ -256,7 +256,7 @@
                 "MIT"
             ],
             "description": "Config definition for database extractor",
-            "time": "2020-06-03T09:00:20+00:00"
+            "time": "2020-06-03T10:14:45+00:00"
         },
         {
             "name": "keboola/db-extractor-ssh-tunnel",
