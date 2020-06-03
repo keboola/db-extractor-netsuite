@@ -10,7 +10,6 @@
       "tableName": "Currency",
       "schema": "default"
     },
-    "columns": ["InternalId", "CurrencyPrecision", "DisplaySymbol"],
     "outputTable": "in.c-main.currency"
   }
 }
