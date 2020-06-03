@@ -64,12 +64,13 @@ class OdbcMetadataProvider implements MetadataProvider
                 $tabSchema = $column['TABLE_OWNER'] ?? 'default';
                 $tabName = $column['TABLE_NAME'];
                 $tabId = "$tabSchema.$tabName";
+                $columnType = $column['TYPE_NAME'];
                 if (isset($tableBuilders[$tabId])) {
                     $colName = $column['COLUMN_NAME'];
                     $tableBuilders[$tabId]
                         ->addColumn()
                         ->setName($colName)
-                        ->setType($column['TYPE_NAME'])
+                        ->setType($columnType === 'bit' ? 'bool' : $columnType)
                         ->setNullable((bool) $column['NULLABLE'])
                         ->setPrimaryKey(in_array($colName, $primaryKeys[$tabId], true));
                 }
